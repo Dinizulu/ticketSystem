@@ -11,7 +11,7 @@ namespace ticketSystem.Profiles
             CreateMap<User,UserResponse>()
                 .ForMember(dest => dest.userId,src => src.MapFrom(x => x.userId))
                 .ForMember(dest => dest.Role, src => src.MapFrom(x => x.Role))
-                .ForMember(dest => dest.fullName,src => src.MapFrom(x => x.firstName+" "+x.lastName))
+                .ForMember(dest => dest.fullName,src => src.MapFrom(x => $"{x.firstName} {x.lastName}"))
                 .ForMember(dest => dest.email,src => src.MapFrom(x => x.email));
             CreateMap<User, UserResponse>();
         }
@@ -27,6 +27,18 @@ namespace ticketSystem.Profiles
                 .ForMember(dest => dest.lastName, src => src.MapFrom(x => x.lastName))
                 .ForMember(dest => dest.email, src => src.MapFrom(x => x.email))
                 .ForMember(dest => dest.password, src => src.MapFrom(x => x.password));
+        }
+    }
+    public class UpdateUserProfile : Profile
+    {
+        public UpdateUserProfile()
+        {
+            CreateMap<UserToUpdateDto, User>()
+                .ForMember(dest => dest.Role, src => src.MapFrom(x => x.Role))
+                .ForMember(dest => dest.firstName, src => src.MapFrom(x => x.firstName))
+                .ForMember(dest => dest.lastName, src => src.MapFrom(x => x.lastName))
+                .ForMember(dest => dest.email, src => src.MapFrom(x => x.email));
+
         }
     }
 }

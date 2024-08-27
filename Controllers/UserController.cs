@@ -6,7 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
 using ticketSystem.Data;
 using ticketSystem.DTOs.User;
+using ticketSystem.Interfaces;
 using ticketSystem.Models;
+using ticketSystem.Repository;
 
 namespace ticketSystem.Controllers
 {
@@ -14,10 +16,12 @@ namespace ticketSystem.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserRepository _userRepository;
         private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
-        public UserController(AppDbContext appDbContext, IMapper mapper)
+        public UserController(AppDbContext appDbContext, IMapper mapper, IUserRepository userRepository)
         {
+            _userRepository = userRepository;
             _appDbContext = appDbContext;
             _mapper = mapper;
         }
@@ -26,7 +30,7 @@ namespace ticketSystem.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserResponse>> GettAllUsers()
         {
-            var users = await _appDbContext.User.ToListAsync();
+            var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<UserResponse>>(users);
         }
         //Getting user by their employee ID
@@ -34,7 +38,7 @@ namespace ticketSystem.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponse>> GetUserById(int id)
         {
-            var user = await _appDbContext.User.FindAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
             {
@@ -48,34 +52,33 @@ namespace ticketSystem.Controllers
         public async Task<ActionResult> CreateUser(CreateUserDto user)
         {
             var userToAdd = _mapper.Map<User>(user);
-            _appDbContext.User.Add(userToAdd);
-            await _appDbContext.SaveChangesAsync();
+            await _userRepository.InsertUserAsync(userToAdd);
             return Ok("Success");
         }
         //Updating a single user
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, UserResponse updateUser)
+        public async Task<IActionResult> UpdateUser(int id, UserToUpdateDto updateUser)
         {
-            var userToUpdate = _appDbContext.User.Find(id);
+            var userToUpdate = await _userRepository.GetByIdAsync(id);
             if (userToUpdate == null)
             {
                 return NotFound();
             }
             _mapper.Map(updateUser,userToUpdate);
-            _appDbContext.SaveChanges();
+            await _userRepository.UpdateDbAsync();
             return Ok("User has been updated");
         }
         //Deleting a user from the system
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var userToDelete = _appDbContext.User.Find(id);
+            var userToDelete = await _userRepository.GetByIdAsync(id);
             if (userToDelete == null)
             { 
                 return NotFound();
             }
             _appDbContext.User.Remove(userToDelete);
-            _appDbContext.SaveChanges();
+            await _userRepository.UpdateDbAsync();
             return Ok();
         }
 

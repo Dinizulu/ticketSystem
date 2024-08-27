@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using ticketSystem.Data;
 using ticketSystem.DTOs.User;
+using ticketSystem.Interfaces;
 using ticketSystem.Profiles;
+using ticketSystem.Repository;
 
 namespace ticketSystem
 {
@@ -22,6 +24,8 @@ namespace ticketSystem
             builder.Services.AddSwaggerGen();
             //Adding auto Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             var app = builder.Build();
 

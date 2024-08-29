@@ -24,8 +24,9 @@ namespace ticketSystem
             builder.Services.AddSwaggerGen();
             //Adding auto Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            //Adding dependancy injection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IbugRepository,BugRepository>();
 
             var app = builder.Build();
 

@@ -17,12 +17,10 @@ namespace ticketSystem.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly AppDbContext _appDbContext;
         private readonly IMapper _mapper;
-        public UserController(AppDbContext appDbContext, IMapper mapper, IUserRepository userRepository)
+        public UserController( IMapper mapper, IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _appDbContext = appDbContext;
             _mapper = mapper;
         }
         //Getting all the users within the system/database
@@ -79,7 +77,7 @@ namespace ticketSystem.Controllers
             }
             await _userRepository.DeleteUserAsync(userToDelete);
             await _userRepository.UpdateDbAsync();
-            return Ok();
+            return Ok("User Deleted");
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ticketSystem.Data;
 using ticketSystem.DTOs.User;
 using ticketSystem.Interfaces;
@@ -27,10 +28,11 @@ namespace ticketSystem.Repository
             return await _appDbContext.User.FindAsync(id);
         }
         //Inserting a user to the Database
-        public async Task InsertUserAsync(User user)
+        public async Task<User> InsertUserAsync(User user)
         {
             await _appDbContext.User.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
+            return user;
         }
         //Updating database/saving changes to the update
         public async Task UpdateDbAsync()

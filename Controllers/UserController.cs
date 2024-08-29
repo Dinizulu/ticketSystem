@@ -77,7 +77,7 @@ namespace ticketSystem.Controllers
             { 
                 return NotFound();
             }
-            _appDbContext.User.Remove(userToDelete);
+            await _userRepository.DeleteUserAsync(userToDelete);
             await _userRepository.UpdateDbAsync();
             return Ok();
         }

@@ -8,5 +8,6 @@ namespace ticketSystem.Interfaces
         Task<User> GetByIdAsync(int id);
         Task InsertUserAsync(User user);
         Task UpdateDbAsync();
+        Task DeleteUserAsync(User user);
     }
 }

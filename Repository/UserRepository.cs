@@ -38,6 +38,10 @@ namespace ticketSystem.Repository
             await _appDbContext.SaveChangesAsync();
         }
         //Deleting a user
-
+        public async Task DeleteUserAsync(User user)
+        {
+            _appDbContext.User.Remove(user);
+             await UpdateDbAsync();
+        }
     }
 }

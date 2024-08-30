@@ -27,6 +27,7 @@ namespace ticketSystem
             //Adding dependancy injection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IbugRepository,BugRepository>();
+            builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
 
             var app = builder.Build();
 

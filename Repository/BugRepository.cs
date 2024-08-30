@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ticketSystem.Data;
 using ticketSystem.Interfaces;
 using ticketSystem.Models;
@@ -19,24 +21,26 @@ namespace ticketSystem.Repository
             return new Bug();
         }
 
-        public Task<Bug> DeleteBugAsync(int id)
+        public async Task<Bug> DeleteBugAsync(Bug bug)
         {
-            throw new NotImplementedException();
+            _appDbContext.bugs.Remove(bug);
+            await _appDbContext.SaveChangesAsync();
+            return new Bug();
         }
 
         public async Task<List<Bug>> GetAllBugAsync()
         {
             return await _appDbContext.bugs.ToListAsync();
         }
-
+        //Search for a bug
         public async Task<Bug> GetBugByIdAsync(int id)
         {
             return await _appDbContext.bugs.FindAsync(id);
         }
-
-        public Task<Bug> UpdateBugAsync(Bug bug)
+        //Updating bug table
+        public async Task UpdateBugAsync()
         {
-            throw new NotImplementedException();
+             await _appDbContext.SaveChangesAsync();
         }
     }
 }

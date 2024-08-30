@@ -18,9 +18,9 @@ namespace ticketSystem.Repository
             _appDbContext = appDbContext;
         }
         //Geting all users from the database
-        public Task<List<User>> GetAllAsync()
+        public async Task<List<User>> GetAllAsync()
         {
-            return _appDbContext.User.ToListAsync();
+            return await _appDbContext.User.ToListAsync();
         }
         //Getting a single user by ID
         public async Task<User> GetByIdAsync(int id)
@@ -43,7 +43,7 @@ namespace ticketSystem.Repository
         public async Task DeleteUserAsync(User user)
         {
             _appDbContext.User.Remove(user);
-             await UpdateDbAsync();
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

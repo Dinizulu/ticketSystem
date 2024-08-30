@@ -35,7 +35,7 @@ namespace ticketSystem.Profiles
         {
             CreateMap<EditBugDto,Bug>()
                 .ForMember(dest => dest.bugSeverity, src => src.MapFrom(x => x.bugSeverity))
-                .ForMember(dest => dest.bugStatus, src => src.MapFrom(x => x.bugSeverity));
+                .ForMember(dest => dest.bugStatus, src => src.MapFrom(x => x.bugStatus));
         }
     }
 }

@@ -45,6 +45,32 @@ namespace ticketSystem.Controllers
             await _ibugRepository.CreateBugAsync(bugToAdd);
             return Ok("Success");
         }
+        //Updating a bug severity and status
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBug(int id, EditBugDto editBugDto)
+        {
+            var bugToUpdate = await  _ibugRepository.GetBugByIdAsync(id);
+            if(bugToUpdate == null)
+            {
+                return  NotFound();
+            }
+            _mapper.Map(editBugDto, bugToUpdate);
+            await _ibugRepository.UpdateBugAsync();
+            return Ok("Bug severity and status updated");
+
+        }
+        //Deleting a bug by Id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBug(int id)
+        {
+            var bugToDelete = await _ibugRepository.GetBugByIdAsync(id);
+            if( bugToDelete == null)
+            {
+                return NotFound();
+            }
+            await _ibugRepository.DeleteBugAsync(bugToDelete);
+            return Ok("Bug deleted");
+        }
 
     }
 }

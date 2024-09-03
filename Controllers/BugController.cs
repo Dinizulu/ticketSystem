@@ -29,6 +29,10 @@ namespace ticketSystem.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Bug>> GetBugById(int id)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var bug = await _ibugRepository.GetBugByIdAsync(id);
             if (bug == null)
             {
@@ -41,14 +45,22 @@ namespace ticketSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateBug(CreateBugDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var bugToAdd = _mapper.Map<Bug>(dto);
             await _ibugRepository.CreateBugAsync(bugToAdd);
             return Ok("Success");
         }
         //Updating a bug severity and status
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBug(int id, EditBugDto editBugDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var bugToUpdate = await  _ibugRepository.GetBugByIdAsync(id);
             if(bugToUpdate == null)
             {
@@ -60,9 +72,13 @@ namespace ticketSystem.Controllers
 
         }
         //Deleting a bug by Id
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteBug(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var bugToDelete = await _ibugRepository.GetBugByIdAsync(id);
             if( bugToDelete == null)
             {

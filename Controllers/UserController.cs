@@ -28,14 +28,22 @@ namespace ticketSystem.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserResponse>> GettAllUsers()
         {
+            if (!ModelState.IsValid)
+            {
+                return Enumerable.Empty<UserResponse>();
+            }
             var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<UserResponse>>(users);
         }
         //Getting user by their employee ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<UserResponse>> GetUserById(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
@@ -49,14 +57,20 @@ namespace ticketSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUser(CreateUserDto user)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var userToAdd = _mapper.Map<User>(user);
             await _userRepository.InsertUserAsync(userToAdd);
             return Ok("Success");
         }
         //Updating a single user
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateUser(int id, UserToUpdateDto updateUser)
         {
+            if (!ModelState.IsValid)
+                { return BadRequest(ModelState); }
             var userToUpdate = await _userRepository.GetByIdAsync(id);
             if (userToUpdate == null)
             {
@@ -67,9 +81,11 @@ namespace ticketSystem.Controllers
             return Ok("User has been updated");
         }
         //Deleting a user from the system
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            if (!ModelState.IsValid)
+                { return BadRequest(ModelState); }
             var userToDelete = await _userRepository.GetByIdAsync(id);
             if (userToDelete == null)
             { 

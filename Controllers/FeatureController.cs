@@ -25,9 +25,11 @@ namespace ticketSystem.Controllers
             return _mapper.Map<IEnumerable<Feature>>(features);
         }
         //Getting a feature by ID
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Feature>> GetFeatureById(int id)
         {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
             var feature = await _featureRepository.GetByIdAsync(id);
             if (feature == null)
             {
@@ -40,14 +42,23 @@ namespace ticketSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAFeature(CreateFeatureDto feature)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var featureToAdd = _mapper.Map<Feature>(feature);
             await _featureRepository.CreateFeatureAsync(featureToAdd);
             return Ok("Feature has been added to the database");
         }
         //Updating a feature status
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateAFeature(int id,EditFeatureDto editFeature)
         {
+            if(!ModelState.IsValid)
+            {  
+                return BadRequest(ModelState); 
+            }
+
             var featureToUpdate = await _featureRepository.GetByIdAsync(id);
             if(featureToUpdate == null)
             {
@@ -58,9 +69,14 @@ namespace ticketSystem.Controllers
             return Ok("Feature status has been updated");
         }
         //Deleting a feature
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteFeature(int id)
         {
+            if(!ModelState.IsValid)
+            {  
+                return BadRequest(ModelState); 
+            }
+
             var bugToDelete = await _featureRepository.GetByIdAsync(id);
             if(bugToDelete == null)
             {

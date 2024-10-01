@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ticketSystem.Models;
 
 namespace ticketSystem.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> User { get; set; }
@@ -17,6 +19,16 @@ namespace ticketSystem.Data
                 .Property(b => b.bugId).ValueGeneratedOnAdd();
             modelBuilder.Entity<Feature>()
                 .Property(f => f.featureId).ValueGeneratedOnAdd();
+            base.OnModelCreating(modelBuilder);
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole{Name = "User",NormalizedName = "USER"},
+                new IdentityRole{Name = "ADM",NormalizedName = "ADMINISTRATOR"},
+                new IdentityRole{Name = "RD",NormalizedName = "RESEARCH AND DEVELOPMENT"},
+                new IdentityRole{Name = "QA",NormalizedName = "Quality Assurance"},
+                new IdentityRole{Name = "PM",NormalizedName = "PROJECT MANAGER"}
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
 
     }

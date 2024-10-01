@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ticketSystem.Data;
 
@@ -11,9 +12,11 @@ using ticketSystem.Data;
 namespace ticketSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910133534_identity")]
+    partial class identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,38 +50,6 @@ namespace ticketSystem.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e77d3f2b-c6a8-4ddd-8854-1f6ac4dbc4f8",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "372b2d3c-a7e5-4fac-8882-183f9c2165e7",
-                            Name = "ADM",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "cfacc284-25f7-46a2-aa1c-873e1a653322",
-                            Name = "RD",
-                            NormalizedName = "RESEARCH AND DEVELOPMENT"
-                        },
-                        new
-                        {
-                            Id = "eabd9ac2-e76f-4cbb-8b35-bfccf9660a6d",
-                            Name = "QA",
-                            NormalizedName = "Quality Assurance"
-                        },
-                        new
-                        {
-                            Id = "1dca9c52-bfed-4384-84b5-9b4a172b4ca5",
-                            Name = "PM",
-                            NormalizedName = "PROJECT MANAGER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ticketSystem.Data;
 using ticketSystem.DTOs.User;
 using ticketSystem.Interfaces;
 using ticketSystem.Models;
 using ticketSystem.Profiles;
 using ticketSystem.Repository;
+using ticketSystem.Services;
 
 namespace ticketSystem
 {
@@ -29,6 +32,7 @@ namespace ticketSystem
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequiredLength = 12;
             }).AddEntityFrameworkStores<AppDbContext>();
+
             //Adding schemas
             builder.Services.AddAuthentication(options =>
             options.DefaultAuthenticateScheme =
@@ -51,12 +55,41 @@ namespace ticketSystem
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //Adding authentication to the endpoint to ensure authorised access is achieved
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Ticket System Demo", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Kindly enter valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{ }
+                    },
+                });
+            });
             //Adding auto Mapper 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //Adding dependancy injection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IbugRepository,BugRepository>();
             builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
+            builder.Services.AddScoped<ITokenService, TokeService>();
 
             var app = builder.Build();
 
